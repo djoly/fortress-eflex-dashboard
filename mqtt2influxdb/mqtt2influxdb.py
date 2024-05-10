@@ -40,10 +40,8 @@ def write_data(battery_data: dict, hosturl: str, bucket: str, org: str, token: s
         with InfluxDBClient(url=hosturl, token=token, org=org) as _client:
             with _client.write_api(write_options=write_api.WriteOptions(flush_interval=1500)) as _write_client:
 
-                logger.debug(f"Writing battery data {battery_data} to InfluxDB")
-
                 for data in battery_data:
-                    ts = datetime.fromtimestamp(data["time"])
+                    ts = datetime.utcfromtimestamp(data["time"])
 
                     # Write battery module level values
                     _write_client.write(bucket, org, Point("battery_measurements")

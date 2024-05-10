@@ -22,7 +22,7 @@ formatter = logging.Formatter(
     '%(asctime)s [%(name)-12s] %(levelname)-8s %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
-logger.setLevel(int(os.getenv("LOG_LEVEL", logging.DEBUG)))
+logger.setLevel(int(os.getenv("LOG_LEVEL", logging.INFO)))
 
 parser = argparse.ArgumentParser(description="Fortress eFlex Battery CAN 2 MQTT Shell Script")
 parser.add_argument("--mqtt_host",help="The hostname of the MQTT server", default="localhost")
@@ -31,6 +31,7 @@ parser.add_argument("--mqtt_topic",help="The topic the data is published to.", d
 parser.add_argument("--mqtt_client_id", help="MQTT client id", default="")
 parser.add_argument("--mqtt_keepalive", help="MQTT keepalive time", type=int, default=60)
 parser.add_argument("--mqtt_qos", help="MQTT QoS", type=int, default=2)
+parser.add_argument("--publish_interval", help="MQTT publish interval, in seconds", type=int, default=60)
 parser.add_argument("--can_interface",help="The CAN interface (e.g. socketcan)", default="socketcan")
 parser.add_argument("--can_channel",help="The CAN channel (i.e. can0, vcan0, etc)", default="vcan0")
 parser.add_argument("--can_log_file",help="The CAN logfile", default="eflexbatteries-can-message-log.asc")
@@ -228,19 +229,19 @@ async def main() -> None:
         interface=args.can_interface, channel=args.can_channel
     ) as bus:
         reader = can.AsyncBufferedReader()
-        logger = can.Logger(args.can_log_file)
+        #logger = can.Logger(args.can_log_file)
 
         listeners: List[MessageRecipient] = [
             handle_message,
             reader, 
-            logger,
+            #logger,
         ]
 
         loop = asyncio.get_running_loop()
         notifier = can.Notifier(bus, listeners, loop=loop)
-        
+
         while True:
-            await asyncio.sleep(PUBLISH_INTERVAL)
+            await asyncio.sleep(args.publish_interval)
             publish_data()
 
 
