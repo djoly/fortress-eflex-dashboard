@@ -1,4 +1,10 @@
-# This project is in progress! Check back in a couple weeks
+# Fortress eFlex Dashboard
+
+This project is a collection of scripts and dashboard that can be used to capture data from Fortress Power eFlex batteries for tracking and visualization in InfluxDB and Grafana.
+
+DISCLAIMER: This project is in no way affiliated with Fortress Power. It comes with no warrantees or guarantees. Use at your own risk.
+
+CAUTION: This project is a work in progress.
 
 ## Running the eflexcan2mqtt script
 
@@ -6,9 +12,9 @@ To run this script, you will need a canbus interface and channel, along with a m
 
 Suggested setup:
 
-Linux computer/server
-can-tools installed, if testing or developing
-CAN hardware natively supported by socketcan
+1. Linux computer/server 
+2. can-tools installed, if testing or developing
+3. CAN hardware natively supported by socketcan
 
 For real hardware:
 
@@ -66,6 +72,6 @@ from(bucket:"eflex_data")
 ```
 from(bucket:"eflex_data")
 |>range(start:-1w)
-|>filter(fn: (r) => r._measurement == "battery_cell_voltages" and r.battery_id == "2205054E0112")
+|>filter(fn: (r) => r._measurement == "battery_cell_voltages" and r.battery_id == "2205054E9999")
 ```
 
