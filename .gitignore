@@ -1,0 +1,8 @@
+__pycache__
+devices/*
+mosquitto/data/*
+mosquitto/log/*
+logs/*out*
+grafana/plugins/redis-datasource
+
+
