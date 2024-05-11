@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 from influxdb_client.client import write_api
 from influxdb_client import InfluxDBClient, Point
-from datetime import datetime
+from datetime import datetime, timezone
 import argparse
 import logging, logging.handlers, os
 import json
@@ -41,7 +41,7 @@ def write_data(battery_data: dict, hosturl: str, bucket: str, org: str, token: s
             with _client.write_api(write_options=write_api.WriteOptions(flush_interval=1500)) as _write_client:
 
                 for data in battery_data:
-                    ts = datetime.utcfromtimestamp(data["time"])
+                    ts = datetime.fromtimestamp(data["time"], timezone.utc)
 
                     # Write battery module level values
                     _write_client.write(bucket, org, Point("battery_measurements")
