@@ -56,7 +56,7 @@ def write_data(battery_data: dict, hosturl: str, bucket: str, org: str, token: s
                     for cell_num, cell_voltage in enumerate(data["cell_voltages"]):
                         _write_client.write(bucket, org, Point("battery_cell_voltages")
                         .tag("battery_id", data["battery_id"])
-                        .tag("cell_num", cell_num + 1)
+                        .tag("cell_num", str(cell_num + 1).zfill(2))
                         .field("voltage", cell_voltage)
                         .time(ts)
                         )
